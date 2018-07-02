@@ -112,7 +112,7 @@ Room create_room(char *room_str, size_t room_str_size) {
 
 void print_room(Room room) {
   int i;
-  for (i = 0; i <= room.layer_count; i++) {
+  for (i = 0; i < room.layer_count; i++) {
     RoomLayer layer = room.layers[i];
     int x, y;
     for (y = 0; y < layer.height; y++) {
@@ -121,6 +121,7 @@ void print_room(Room room) {
       }
       printf("\n");
     }
+    printf("\n");
   }
 }
 
