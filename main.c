@@ -19,6 +19,11 @@ enum TileType {
 };
 
 typedef struct {
+  float x;
+  float y;
+} Point;
+
+typedef struct {
   int id;
   char c;
   enum TileType tile_type;
@@ -38,6 +43,20 @@ typedef struct {
 } Room;
 
 char lookup[TILE_TYPE_LEN] = {'.', '#', '^', '^', '^', '^'};
+
+Point cartesian_to_isometric(Point cart) {
+  Point iso;
+  iso.x = cart.x - cart.y;
+  iso.y = (cart.x + cart.y) / 2;
+  return iso;
+}
+
+Point isometroc_to_cartesian(Point iso) {
+  Point cart;
+  cart.x = (2 * iso.y + iso.x) / 2;
+  cart.y = (2 * iso.y - iso.x) / 2;
+  return cart;
+}
 
 bool valid_room_char(char c) { return c == '.' || c == '#' || c == '^'; }
 void free_room(Room room) {
