@@ -36,6 +36,15 @@ typedef struct {
 char lookup[TILE_TYPE_LEN] = {'.', '#', '^', '^', '^', '^'};
 
 bool valid_room_char(char c) { return c == '.' || c == '#' || c == '^'; }
+void free_room(Room room) {
+  int i;
+  for (i = 0; i < room.layer_count; i++) {
+    RoomLayer layer = room.layers[i];
+    free(layer.tiles);
+  }
+  free(room.layers);
+}
+
 Room create_room(char *room_str, size_t room_str_size) {
   int layer_count = 0;
   int layer_width = 0;
@@ -125,19 +134,29 @@ void print_room(Room room) {
   }
 }
 
-int main(int argc, char **argv) {
-  if (argc == 1) {
-    printf("Please provide a level.\n");
-    return 1;
-  }
+void read_room_file(char *file_name) {
   FILE *file = NULL;
-  file = fopen(argv[1], "r");
+  file = fopen(file_name, "r");
   if (file) {
     char buff[MAX_ROOM_SIZE];
     size_t file_size = fread(buff, sizeof(char), MAX_ROOM_SIZE, file);
     Room room = create_room(buff, file_size);
     print_room(room);
+    free_room(room);
   }
   fclose(file);
+}
+
+int main(int argc, char **argv) {
+  if (argc == 1) {
+    printf("Please provide a level.\n");
+    return 1;
+  }
+  int i;
+  for (i = 1; i < argc; i++) {
+    printf("%s\n", argv[i]);
+    char *file_name = argv[i];
+    read_room_file(file_name);
+  }
   return 0;
 }
